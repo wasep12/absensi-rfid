@@ -10,7 +10,11 @@ const DataKaryawan = () => {
       <div className="flex flex-1">
         {/* Sidebar */}
         <Sidebar />
-        <div></div>
+        <div className="flex-1 p-6 bg-white">
+          <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+            Data Karyawan
+          </h1>
+        </div>
       </div>
 
       {/* Footer */}
