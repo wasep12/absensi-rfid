@@ -12,7 +12,9 @@ const Absensi = () => {
         <Sidebar />
         {/* Main Content */}
         <div className="flex-1 p-6 bg-white">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">Absensi</h1>
+          <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+            Absensi Karyawan
+          </h1>
         </div>
       </div>
 
