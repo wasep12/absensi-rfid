@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 
 const Sidebar = () => {
@@ -32,9 +32,15 @@ const Sidebar = () => {
 
         <ul>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/admin-dashboard"
-              className=" flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -46,12 +52,18 @@ const Sidebar = () => {
                 <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
               </svg>
               Dashboard
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/absensi"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -62,12 +74,18 @@ const Sidebar = () => {
                 <path d="M10.5 1.875a1.125 1.125 0 0 1 2.25 0v8.219c.517.162 1.02.382 1.5.659V3.375a1.125 1.125 0 0 1 2.25 0v10.937a4.505 4.505 0 0 0-3.25 2.373 8.963 8.963 0 0 1 4-.935A.75.75 0 0 0 18 15v-2.266a3.368 3.368 0 0 1 .988-2.37 1.125 1.125 0 0 1 1.591 1.59 1.118 1.118 0 0 0-.329.79v3.006h-.005a6 6 0 0 1-1.752 4.007l-1.736 1.736a6 6 0 0 1-4.242 1.757H10.5a7.5 7.5 0 0 1-7.5-7.5V6.375a1.125 1.125 0 0 1 2.25 0v5.519c.46-.452.965-.832 1.5-1.141V3.375a1.125 1.125 0 0 1 2.25 0v6.526c.495-.1.997-.151 1.5-.151V1.875Z" />
               </svg>
               Absensi
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/data-karyawan"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,12 +101,18 @@ const Sidebar = () => {
                 <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
               </svg>
               Data Karyawan
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/laporan"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,12 +128,18 @@ const Sidebar = () => {
                 <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
               </svg>
               Laporan
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/registrasi"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -120,12 +150,18 @@ const Sidebar = () => {
                 <path d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
               </svg>
               Registrasi
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/setting"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -140,12 +176,18 @@ const Sidebar = () => {
                 />
               </svg>
               Setting
-            </Link>
+            </NavLink>
           </li>
           <li className="mb-2">
-            <Link
+            <NavLink
               to="/about"
-              className="flex p-2 rounded-lg text-lg hover:bg-gradient-to-r from-indigo-500 to-blue-600 transition-colors"
+              className={({ isActive }) =>
+                `flex p-2 rounded-lg text-lg transition-colors duration-300 ease-in-out ${
+                  isActive
+                    ? "bg-gradient-to-r from-indigo-500 to-blue-600"
+                    : "hover:bg-gradient-to-r hover:from-indigo-500 hover:to-blue-600"
+                }`
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +202,7 @@ const Sidebar = () => {
                 />
               </svg>
               About
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </aside>
