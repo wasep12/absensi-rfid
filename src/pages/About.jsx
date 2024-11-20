@@ -10,8 +10,10 @@ const About = () => {
       <div className="flex flex-1">
         {/* Sidebar */}
         <Sidebar />
-        <div className="flex-1 p-6 bg-white">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">About</h1>
+        <div className="flex-1 p-6 bg-gray-100">
+          <h1 className="md:text-left text-center text-3xl font-semibold text-gray-800 mb-6">
+            About
+          </h1>
         </div>
       </div>
 

@@ -1,15 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Referensi untuk tombol dan dropdown
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  // Menambahkan event listener untuk klik di luar dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Jika klik di luar dropdown atau tombol, tutup dropdown
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    // Menambahkan event listener klik saat komponen dipasang
+    document.addEventListener("click", handleClickOutside);
+
+    // Membersihkan event listener saat komponen dibersihkan
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []); // Kosongkan dependensi untuk hanya dijalankan sekali
+
   return (
     <header className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white p-5 shadow-md sticky top-0 z-50">
-      <div className="max-w-8xl  flex justify-between items-center">
+      <div className="max-w-8xl flex justify-between items-center">
         <div className="icond ml-3 md:block">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -28,26 +56,29 @@ const Header = () => {
         <h1 className="text-xl font-semibold hidden ml-3 md:block">
           <Link to="/">ABSENSI IoT RFID</Link>
         </h1>
+
         {/* Navigasi Profil dan Menu */}
         <nav className="flex items-center space-x-4 ml-auto">
-          {" "}
-          {/* Tambahkan ml-auto */}
           {/* Profile Icon for Desktop */}
           <div className="relative">
             <button
+              ref={buttonRef}
               className="flex items-center space-x-2"
               onClick={toggleDropdown}
             >
               <img
                 src="https://via.placeholder.com/40" // Gambar profil (ganti dengan URL gambar yang sesuai)
                 alt="Profile"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full border-2 bg-gray-100 border-transparent bg-clip-border"
               />
             </button>
 
             {/* Dropdown Menu untuk Profil */}
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg z-50">
+              <div
+                ref={dropdownRef}
+                className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg z-50"
+              >
                 <ul>
                   <li>
                     <Link
