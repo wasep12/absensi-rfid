@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import tapCardGif from "../assets/tap-card.gif";
+import waiting from "../assets/waiting.gif";
 import React, { useState, useEffect } from "react";
 
 const Absensi = () => {
@@ -20,7 +21,7 @@ const Absensi = () => {
       setLogData((prevData) => [newEntry, ...prevData]);
     };
 
-    const interval = setInterval(simulateRFIDScan, 3000);
+    const interval = setInterval(simulateRFIDScan, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -80,7 +81,7 @@ const Absensi = () => {
       const randomCardKey =
         cardKeys[Math.floor(Math.random() * cardKeys.length)];
       setCurrentCard(dummyData[randomCardKey]);
-    }, 3000); // Change card every 3 seconds
+    }, 5000); // Change card every 5 seconds
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
@@ -149,9 +150,14 @@ const Absensi = () => {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center mt-6">
-                    Waiting for card scan...
-                  </p>
+                  <div className="bg-white rounded-lg shadow-lg p-6 h-full text-gray-500 text-center  flex flex-col items-center">
+                    <img
+                      src={waiting}
+                      alt="waiting"
+                      className="w-48 h-48 mb-4"
+                    />
+                    <p className="text-base">Waiting for card scan...</p>
+                  </div>
                 )}
               </div>
             </div>
