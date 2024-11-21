@@ -9,20 +9,80 @@ import Registrasi from "./pages/Registrasi";
 import Setting from "./pages/Setting";
 import About from "./pages/About";
 import EditProfile from "./pages/EditProfile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Halaman Login */}
         <Route path="/" element={<LoginPage />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/absensi" element={<Absensi />} />
-        <Route path="/data-karyawan" element={<DataKaryawan />} />
-        <Route path="/laporan" element={<Laporan />} />
-        <Route path="/registrasi" element={<Registrasi />} />
-        <Route path="/setting" element={<Setting />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
+
+        {/* Halaman yang dilindungi */}
+        <Route
+          path="/admin-dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/absensi"
+          element={
+            <ProtectedRoute>
+              <Absensi />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/data-karyawan"
+          element={
+            <ProtectedRoute>
+              <DataKaryawan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/laporan"
+          element={
+            <ProtectedRoute>
+              <Laporan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/registrasi"
+          element={
+            <ProtectedRoute>
+              <Registrasi />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/setting"
+          element={
+            <ProtectedRoute>
+              <Setting />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

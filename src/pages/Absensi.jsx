@@ -87,6 +87,45 @@ const Absensi = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Data karyawan beserta jabatan (untuk testing)
+  const karyawan = [
+    { id: 1, nama: "Abdul Haris Nasution", jabatan: "Direktur Utama" },
+    { id: 2, nama: "Arifin", jabatan: "General Manager" },
+    { id: 3, nama: "Finata", jabatan: "General Affair" },
+    { id: 4, nama: "Nopi", jabatan: "Administrasi dan Keuangan" },
+    { id: 5, nama: "Fahrul Rismawan", jabatan: "Data Analyst" },
+  ];
+
+  // State untuk menyimpan data absensi dan pencarian
+  const [absensiData, setAbsensiData] = useState(
+    karyawan.map((karyawan) => ({
+      ...karyawan,
+      status: "",
+      keterangan: "",
+    }))
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fungsi untuk mengubah status dan keterangan absensi
+  const handleAbsensiChange = (id, field, value) => {
+    setAbsensiData((prevState) =>
+      prevState.map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  // Filter karyawan berdasarkan pencarian nama
+  const filteredKaryawan = absensiData.filter((karyawan) =>
+    karyawan.nama.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Fungsi untuk menyimpan absensi
+  const handleSaveAbsensi = () => {
+    // Logika untuk menyimpan absensi (misalnya, kirim ke server)
+    alert("Absensi telah disimpan!");
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Header */}
@@ -101,7 +140,7 @@ const Absensi = () => {
           </h1>
           {/* Gambar RFID Card */}
           <div className="flex flex-col">
-            <h2 className="text-center text-lg font-semibold text-gray-700 mb-6">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
               Letakkan RFID Tag di pemindai
             </h2>
             <div className="flex flex-col md:flex-row items-center justify-center gap-8">
@@ -160,6 +199,93 @@ const Absensi = () => {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+              Absensi Manual Karyawan
+            </h2>
+
+            {/* Input Pencarian dan Tombol Simpan Kehadiran */}
+            <div className="mb-4 flex items-center space-x-4">
+              <input
+                type="text"
+                placeholder="Cari nama karyawan..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="p-2 border border-gray-300 rounded-md flex-1"
+              />
+              <button
+                onClick={handleSaveAbsensi}
+                className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Simpan Kehadiran
+              </button>
+            </div>
+
+            {/* Tabel Absensi */}
+            <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
+              <table className="min-w-full table-auto">
+                <thead className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white">
+                  <tr>
+                    <th className="py-2 px-4 text-left">Nama</th>
+                    <th className="py-2 px-4 text-left">Jabatan</th>
+                    <th className="py-2 px-4 text-left">Absensi</th>
+                    <th className="py-2 px-4 text-left">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredKaryawan.map((karyawan) => (
+                    <tr key={karyawan.id} className="border-b">
+                      <td className="py-2 px-4">{karyawan.nama}</td>
+                      <td className="py-2 px-4">{karyawan.jabatan}</td>
+
+                      <td className="py-2 px-4">
+                        <select
+                          value={karyawan.status}
+                          onChange={(e) =>
+                            handleAbsensiChange(
+                              karyawan.id,
+                              "status",
+                              e.target.value
+                            )
+                          }
+                          className="border border-gray-300 rounded-md p-2 w-full"
+                        >
+                          <option value="" disabled selected>
+                            Pilih Absensi
+                          </option>
+                          <option value="Masuk">Masuk</option>
+                          <option value="Pulang">Pulang</option>
+                        </select>
+                      </td>
+
+                      <td className="py-2 px-4">
+                        <select
+                          value={karyawan.keterangan}
+                          onChange={(e) =>
+                            handleAbsensiChange(
+                              karyawan.id,
+                              "keterangan",
+                              e.target.value
+                            )
+                          }
+                          className="border border-gray-300 rounded-md p-2 w-full"
+                        >
+                          <option value="" disabled selected>
+                            Pilih Keterangan
+                          </option>
+                          <option value="Masuk">Hadir</option>
+                          <option value="Tidak Masuk">Tidak Hadir</option>
+                          <option value="Sakit">Sakit</option>
+                          <option value="Cuti">Cuti</option>
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
 

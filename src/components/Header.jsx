@@ -1,7 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Menghapus token dari localStorage
+    localStorage.removeItem("token");
+
+    // Arahkan pengguna ke halaman login dan reload halaman
+    navigate("/"); // Redirect ke halaman login
+    window.location.reload(); // Reload halaman setelah redirect
+  };
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Referensi untuk tombol dan dropdown
@@ -89,7 +100,11 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
+                    <Link
+                      to="#"
+                      onClick={handleLogout}
+                      className="block px-4 py-2 hover:bg-gray-100 rounded-br-lg rounded-bl-lg"
+                    >
                       Logout
                     </Link>
                   </li>

@@ -1,15 +1,22 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import OfficeMap from "../components/OfficeMap";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (!localStorage.getItem("isAuthenticated")) {
-      window.location.href = "/";
+    // Periksa token di localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Jika tidak ada token, arahkan ke halaman login
+      navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
