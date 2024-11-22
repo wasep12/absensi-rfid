@@ -1,11 +1,158 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Doughnut, Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register chartjs components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import OfficeMap from "../components/OfficeMap";
 
 const AdminDashboard = () => {
+  const [filterType, setFilterType] = useState("daily"); // "daily" or "monthly"
+  const [selectedDate, setSelectedDate] = useState(""); // Date for daily filter
+  const [selectedMonth, setSelectedMonth] = useState(""); // Month for monthly filter
+
+  const donutData = {
+    labels: ["Hadir", "Tidak Hadir", "Sakit", "Cuti"],
+    datasets: [
+      {
+        data: [120, 20, 10, 15],
+        backgroundColor: ["#4CAF50", "#F44336", "#FFC107", "#2196F3"],
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  const barData = {
+    labels:
+      filterType === "daily"
+        ? ["08:00", "09:00", "10:00", "11:00", "12:00"]
+        : ["Week 1", "Week 2", "Week 3", "Week 4"],
+    datasets: [
+      {
+        label:
+          filterType === "daily" ? "Kehadiran per Jam" : "Kehadiran per Minggu",
+        data:
+          filterType === "daily" ? [5, 10, 15, 8, 12] : [120, 140, 110, 130],
+        backgroundColor: "#3B82F6",
+        borderColor: "#2563EB",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const timeData = {
+    labels: [
+      "08:00",
+      "09:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
+      "18:00",
+      "19:00",
+    ], // Jam kedatangan dalam format 24 jam
+    datasets: [
+      {
+        label: "Waktu Kehadiran",
+        data: [
+          "08:15", // Karyawan 1 datang jam 08:15
+          "09:00", // Karyawan 2 datang jam 09:00
+          "10:05", // Karyawan 3 datang jam 10:05
+          "11:00", // Karyawan 4 datang jam 11:00
+          "12:30", // Karyawan 5 datang jam 12:30
+          "13:45", // Karyawan 6 datang jam 13:45
+          "14:00", // Karyawan 7 datang jam 14:00
+          "15:00", // Karyawan 8 datang jam 15:00
+          "16:00", // Karyawan 9 datang jam 16:00
+          "17:00", // Karyawan 10 datang jam 17:00
+          "18:00", // Karyawan 11 datang jam 18:00
+          "19:00", // Karyawan 12 datang jam 19:00
+        ].map((time) => convertTimeToMinutes(time)), // Ubah format waktu menjadi menit
+        borderColor: "#3B82F6", // Warna biru untuk Waktu Kehadiran
+        backgroundColor: "rgba(59, 130, 246, 0.2)", // Transparan biru untuk area di bawah garis
+        fill: true,
+        tension: 0.4, // Membuat garis lebih halus
+      },
+      {
+        label: "Waktu Keluar",
+        data: [
+          "17:00", // Karyawan 1 keluar jam 17:00
+          "17:30", // Karyawan 2 keluar jam 17:30
+          "18:00", // Karyawan 3 keluar jam 18:00
+          "18:15", // Karyawan 4 keluar jam 18:15
+          "18:30", // Karyawan 5 keluar jam 18:30
+          "19:00", // Karyawan 6 keluar jam 19:00
+          "19:30", // Karyawan 7 keluar jam 19:30
+        ].map((time) => convertTimeToMinutes(time)), // Ubah format waktu menjadi menit
+        borderColor: "#F44336", // Warna merah untuk Waktu Keluar
+        backgroundColor: "rgba(244, 67, 54, 0.2)", // Transparan merah untuk area di bawah garis
+        fill: true,
+        tension: 0.4, // Membuat garis lebih halus
+      },
+    ],
+  };
+
+  // Fungsi untuk mengonversi waktu dalam format "HH:MM" ke menit
+  function convertTimeToMinutes(timeString) {
+    const [hours, minutes] = timeString.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  // Fungsi untuk mengonversi waktu dalam format "HH:MM" ke menit
+  function convertTimeToMinutes(timeString) {
+    const [hours, minutes] = timeString.split(":").map(Number);
+    return hours * 60 + minutes;
+  }
+
+  const chartOptions = {
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  useEffect(() => {
+    // This effect can be used to fetch or update data based on the selected filter
+  }, [filterType, selectedDate, selectedMonth]);
+
+  // navigasi
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -110,25 +257,79 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Activity Log */}
-          <div className="bg-white p-6 rounded-lg shadow-lg mb-6">
-            <h3 className="text-xl font-medium text-gray-600 mb-4">
-              Log Absensi Terbaru
-            </h3>
-            <ul>
-              <li className="flex justify-between py-2 border-b border-gray-200">
-                <span>John Doe - Absen Masuk</span>
-                <span className="text-gray-500 text-sm">1 jam lalu</span>
-              </li>
-              <li className="flex justify-between py-2 border-b border-gray-200">
-                <span>Jane Smith - Absen Keluar</span>
-                <span className="text-gray-500 text-sm">2 jam lalu</span>
-              </li>
-              <li className="flex justify-between py-2 border-b border-gray-200">
-                <span>Mark Johnson - Absen Masuk</span>
-                <span className="text-gray-500 text-sm">3 jam lalu</span>
-              </li>
-            </ul>
+          {/* STATITIK DATA ABSENSI */}
+          <div className="bg-gray-100 min-h-screen mb-6">
+            <h1 className="text-2xl font-bold text-center mb-8">
+              Statistik Data Absensi
+            </h1>
+
+            {/* Filter */}
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  className={`px-4 py-2 rounded ${
+                    filterType === "daily"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                  onClick={() => setFilterType("daily")}
+                >
+                  Harian
+                </button>
+                <button
+                  className={`px-4 py-2 rounded ${
+                    filterType === "monthly"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                  onClick={() => setFilterType("monthly")}
+                >
+                  Bulanan
+                </button>
+              </div>
+
+              {filterType === "daily" ? (
+                <input
+                  type="date"
+                  className="border border-gray-300 rounded px-4 py-2"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                />
+              ) : (
+                <input
+                  type="month"
+                  className="border border-gray-300 rounded px-4 py-2"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                />
+              )}
+            </div>
+
+            {/* Grafik */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-lg font-semibold text-center mb-4">
+                  Statistik Kehadiran
+                </h2>
+                <Doughnut data={donutData} options={chartOptions} />
+              </div>
+
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h2 className="text-lg font-semibold text-center mb-4">
+                  {filterType === "daily"
+                    ? "Tren Kehadiran Harian"
+                    : "Tren Kehadiran Bulanan"}
+                </h2>
+                <Bar data={barData} options={chartOptions} />
+
+                {/* Waktu Kehadiran dan Keluar */}
+
+                <h2 className="text-lg font-semibold text-center mb-4">
+                  Waktu Kehadiran dan Keluar
+                </h2>
+                <Line data={timeData} options={chartOptions} />
+              </div>
+            </div>
           </div>
 
           {/* Main Content */}

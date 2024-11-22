@@ -10,6 +10,7 @@ import Setting from "./pages/Setting";
 import About from "./pages/About";
 import EditProfile from "./pages/EditProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "../localStorageSetup"; // Impor file setup
 
 const App = () => {
   return (
