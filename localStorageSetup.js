@@ -182,8 +182,11 @@ const dummyData = [
   },
 ];
 
-// Cek jika data karyawan belum ada di localStorage
+/// Cek jika data karyawan belum ada di localStorage
 if (!localStorage.getItem("karyawanData")) {
   // Jika belum ada, simpan data dummy ke localStorage
   localStorage.setItem("karyawanData", JSON.stringify(dummyData));
+  console.log("Data dummy telah disimpan di localStorage");
+} else {
+  console.log("Data sudah ada di localStorage");
 }

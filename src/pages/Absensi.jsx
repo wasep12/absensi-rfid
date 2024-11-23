@@ -7,8 +7,12 @@ import React, { useState, useEffect } from "react";
 
 const Absensi = () => {
   const [logData, setLogData] = useState([]);
+  const [currentCard, setCurrentCard] = useState(null);
+  const [dataKaryawan, setKaryawanData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah data per halaman
+
+  const itemsPerPageAbsen = 10;
 
   // Simulasi data real-time
   useEffect(() => {
@@ -25,107 +29,106 @@ const Absensi = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Hitung data untuk halaman saat ini
-  const totalPages = Math.ceil(logData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedData = logData.slice(startIndex, endIndex);
-
-  // Fungsi untuk mengubah halaman
-  const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const dummyData = {
-    1234567890: {
-      photo: "https://via.placeholder.com/150",
-      name: "John Doe",
-      position: "Software Engineer",
-      timeIn: "08:45 AM",
-      status: "Late",
-      timeDifference: 15, // in minutes
-    },
-    9876543210: {
-      photo: "https://via.placeholder.com/150",
-      name: "Jane Smith",
-      position: "HR Manager",
-      timeIn: "08:30 AM",
-      status: "Early",
-      timeDifference: 10, // in minutes
-    },
-    1122334455: {
-      photo: "https://via.placeholder.com/150",
-      name: "Michael Brown",
-      position: "System Analyst",
-      timeIn: "09:00 AM",
-      status: "Late",
-      timeDifference: 30, // in minutes
-    },
-  };
-
-  const [currentCard, setCurrentCard] = useState(null);
-
+  // Simulasi data karyawan
   useEffect(() => {
-    const cardKeys = Object.keys(dummyData);
+    const dummyData = {
+      1234567890: {
+        photo: "https://via.placeholder.com/150",
+        name: "John Doe",
+        position: "Software Engineer",
+        timeIn: "08:45 AM",
+        status: "Late",
+        timeDifference: 15, // in minutes
+      },
+      9876543210: {
+        photo: "https://via.placeholder.com/150",
+        name: "Jane Smith",
+        position: "HR Manager",
+        timeIn: "08:30 AM",
+        status: "Early",
+        timeDifference: 10, // in minutes
+      },
+      1122334455: {
+        photo: "https://via.placeholder.com/150",
+        name: "Michael Brown",
+        position: "System Analyst",
+        timeIn: "09:00 AM",
+        status: "Late",
+        timeDifference: 30, // in minutes
+      },
+    };
 
+    const cardKeys = Object.keys(dummyData);
     const interval = setInterval(() => {
-      // Simulate RFID scanning by picking a random card
       const randomCardKey =
         cardKeys[Math.floor(Math.random() * cardKeys.length)];
       setCurrentCard(dummyData[randomCardKey]);
     }, 5000); // Change card every 5 seconds
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
-  // Data karyawan beserta jabatan (untuk testing)
-  const karyawan = [
-    { id: 1, nama: "Abdul Haris Nasution", jabatan: "Direktur Utama" },
-    { id: 2, nama: "Arifin", jabatan: "General Manager" },
-    { id: 3, nama: "Finata", jabatan: "General Affair" },
-    { id: 4, nama: "Nopi", jabatan: "Administrasi dan Keuangan" },
-    { id: 5, nama: "Fahrul Rismawan", jabatan: "Data Analyst" },
-  ];
+  // Ambil data karyawan dari localStorage
+  useEffect(() => {
+    // Ambil data dari localStorage saat komponen dimuat
+    const storedData = localStorage.getItem("karyawanData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setKaryawanData(parsedData); // Simpan data ke state
+    } else {
+      console.log("Data tidak ditemukan di localStorage");
+    }
+  }, []);
 
-  // State untuk menyimpan data absensi dan pencarian
-  const [absensiData, setAbsensiData] = useState(
-    karyawan.map((karyawan) => ({
-      ...karyawan,
-      status: "",
-      keterangan: "",
-    }))
+  // Filter data berdasarkan pencarian
+  const filteredData = dataKaryawan.filter(
+    (karyawan) =>
+      karyawan.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      karyawan.rfidId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      karyawan.position.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const [searchQuery, setSearchQuery] = useState("");
 
-  // Fungsi untuk mengubah status dan keterangan absensi
-  const handleAbsensiChange = (id, field, value) => {
-    setAbsensiData((prevState) =>
-      prevState.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPageAbsen;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPageAbsen;
+  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Fungsi untuk mengubah aksi kehadiran
+  const handleKehadiranChange = (id, value) => {
+    setDataKaryawan((prevData) =>
+      prevData.map((karyawan) =>
+        karyawan.rfidId === id ? { ...karyawan, kehadiran: value } : karyawan
       )
     );
   };
 
-  // Filter karyawan berdasarkan pencarian nama
-  const filteredKaryawan = absensiData.filter((karyawan) =>
-    karyawan.nama.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Fungsi untuk menyimpan absensi
-  const handleSaveAbsensi = () => {
-    // Logika untuk menyimpan absensi (misalnya, kirim ke server)
-    alert("Absensi telah disimpan!");
+  // Fungsi untuk menyimpan data
+  const handleSave = () => {
+    localStorage.setItem("dataKaryawan", JSON.stringify(dataKaryawan));
+    alert("Data absensi berhasil disimpan!");
   };
 
+  // Hitung total halaman untuk pagination
+  const totalPages = Math.ceil(filteredData.length / itemsPerPageAbsen);
+
+  // Fungsi untuk mengonversi logData ke format CSV
+  const downloadCSV = () => {
+    const csvRows = [];
+    const headers = ["ID", "Nama Karyawan", "Waktu"];
+    csvRows.push(headers.join(",")); // Menambahkan header CSV
+
+    // Menambahkan data log ke dalam CSV
+    logData.forEach((entry) => {
+      csvRows.push([entry.id, entry.name, entry.timestamp].join(","));
+    });
+
+    // Membuat file CSV dan memulai unduhan
+    const csvFile = new Blob([csvRows.join("\n")], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(csvFile);
+    link.download = "log_absensi.csv";
+    link.click();
+  };
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       {/* Header */}
@@ -202,84 +205,70 @@ const Absensi = () => {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          {/* Absensi Manual Karyawan */}
+          <div className="mt-6 mb-6">
+            <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
               Absensi Manual Karyawan
             </h2>
-
-            {/* Input Pencarian dan Tombol Simpan Kehadiran */}
+            {/* Input Pencarian dan Tombol Simpan */}
             <div className="mb-4 flex items-center space-x-4">
               <input
                 type="text"
-                placeholder="Cari nama karyawan..."
+                placeholder="Cari nama, RFID, atau posisi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="p-2 border border-gray-300 rounded-md flex-1"
               />
               <button
-                onClick={handleSaveAbsensi}
+                onClick={handleSave}
                 className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
                 Simpan Kehadiran
               </button>
             </div>
-
             {/* Tabel Absensi */}
             <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
               <table className="min-w-full table-auto">
-                <thead className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white">
+                <thead className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white text-center">
                   <tr>
-                    <th className="py-2 px-4 text-left">Nama</th>
-                    <th className="py-2 px-4 text-left">Jabatan</th>
-                    <th className="py-2 px-4 text-left">Absensi</th>
-                    <th className="py-2 px-4 text-left">Keterangan</th>
+                    <th className="py-2 px-4 text-center">No</th>
+                    <th className="py-2 px-4 text-center">Nama</th>
+                    <th className="py-2 px-4 text-center">ID</th>
+                    <th className="py-2 px-4 text-center">Jenis Kelamin</th>
+                    <th className="py-2 px-4 text-center">Posisi</th>
+                    <th className="py-2 px-4 text-center">Kehadiran</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredKaryawan.map((karyawan) => (
-                    <tr key={karyawan.id} className="border-b">
-                      <td className="py-2 px-4">{karyawan.nama}</td>
-                      <td className="py-2 px-4">{karyawan.jabatan}</td>
-
+                  {currentData.map((karyawan) => (
+                    <tr key={karyawan.rfidId}>
                       <td className="py-2 px-4">
-                        <select
-                          value={karyawan.status}
-                          onChange={(e) =>
-                            handleAbsensiChange(
-                              karyawan.id,
-                              "status",
-                              e.target.value
-                            )
-                          }
-                          className="border border-gray-300 rounded-md p-2 w-full"
-                        >
-                          <option value="" disabled selected>
-                            Pilih Absensi
-                          </option>
-                          <option value="Masuk">Masuk</option>
-                          <option value="Pulang">Pulang</option>
-                        </select>
+                        <img
+                          src={karyawan.photo}
+                          alt={karyawan.name}
+                          className="w-10 h-10 rounded-full"
+                        />
                       </td>
-
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-4">{karyawan.rfidId}</td>
+                      <td className="py-2 px-4">{karyawan.name}</td>
+                      <td className="py-2 px-4">{karyawan.gender}</td>
+                      <td className="py-2 px-4">{karyawan.position}</td>
+                      <td className="py-2 px-4 text-center">
                         <select
-                          value={karyawan.keterangan}
+                          value={karyawan.kehadiran || ""}
                           onChange={(e) =>
-                            handleAbsensiChange(
-                              karyawan.id,
-                              "keterangan",
+                            handleKehadiranChange(
+                              karyawan.rfidId,
                               e.target.value
                             )
                           }
-                          className="border border-gray-300 rounded-md p-2 w-full"
+                          className="border border-gray-300 rounded-md px-2 py-1"
                         >
-                          <option value="" disabled selected>
-                            Pilih Keterangan
-                          </option>
-                          <option value="Masuk">Hadir</option>
-                          <option value="Tidak Masuk">Tidak Hadir</option>
+                          <option value="">Pilih Kehadiran</option>
+                          <option value="Hadir">Hadir</option>
+                          <option value="Tidak Hadir">Tidak Hadir</option>
+                          <option value="Izin">Izin</option>
                           <option value="Sakit">Sakit</option>
-                          <option value="Cuti">Cuti</option>
                         </select>
                       </td>
                     </tr>
@@ -287,90 +276,75 @@ const Absensi = () => {
                 </tbody>
               </table>
             </div>
-          </div>
-
-          <div className="pt-6 min-h-screen">
-            <div className="max-w-5xl mx-auto">
-              {/* Header */}
-              <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
-                RFID Attendance Log
-              </h1>
-
-              {/* Log Kehadiran */}
-              <div className="bg-white shadow-md rounded-lg p-4">
-                <h2 className="text-lg font-semibold text-gray-700 mb-3">
-                  Log Kehadiran
+            {/* Pagination */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="py-2 px-4 bg-blue-700 text-gray-200 rounded-md hover:bg-blue-800 disabled:opacity-50"
+              >
+                Prev
+              </button>
+              <span className="py-2 px-4 text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="py-2 px-4 bg-blue-700 text-gray-200 rounded-md hover:bg-blue-800 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+            <div className="container mx-auto">
+              {/* Log Absensi */}
+              <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
+                <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+                  Log Absensi
                 </h2>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-sm text-left text-gray-600">
-                    <thead className="bg-gray-100">
+
+                {/* Tabel dengan batasan 10 entri */}
+                <div
+                  className="overflow-y-scroll"
+                  style={{ maxHeight: "300px" }}
+                >
+                  <table className="table-auto w-full border-collapse">
+                    <thead>
                       <tr>
-                        <th className="px-4 py-2 font-medium text-gray-700">
-                          #
-                        </th>
-                        <th className="px-4 py-2 font-medium text-gray-700">
-                          Waktu
-                        </th>
-                        <th className="px-4 py-2 font-medium text-gray-700">
-                          ID RFID
-                        </th>
-                        <th className="px-4 py-2 font-medium text-gray-700">
-                          Nama
-                        </th>
+                        <th className="border p-2 text-left">ID</th>
+                        <th className="border p-2 text-left">Nama Karyawan</th>
+                        <th className="border p-2 text-left">Waktu</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {displayedData.map((entry, index) => (
-                        <tr
-                          key={index}
-                          className={
-                            index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                          }
-                        >
-                          <td className="px-4 py-2">
-                            {startIndex + index + 1}
-                          </td>
-                          <td className="px-4 py-2">{entry.timestamp}</td>
-                          <td className="px-4 py-2">{entry.id}</td>
-                          <td className="px-4 py-2">{entry.name}</td>
+                      {logData.slice(0, 10).map((entry, index) => (
+                        <tr key={index}>
+                          <td className="border p-2">{entry.id}</td>
+                          <td className="border p-2">{entry.name}</td>
+                          <td className="border p-2">{entry.timestamp}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
 
-                {/* Kontrol Pagination */}
-                {logData.length > itemsPerPage && (
-                  <div className="flex justify-between items-center mt-4">
-                    <button
-                      onClick={goToPreviousPage}
-                      className={`px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none ${
-                        currentPage === 1 && "opacity-50 cursor-not-allowed"
-                      }`}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </button>
-                    <span className="text-gray-600">
-                      Halaman {currentPage} dari {totalPages}
-                    </span>
-                    <button
-                      onClick={goToNextPage}
-                      className={`px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none ${
-                        currentPage === totalPages &&
-                        "opacity-50 cursor-not-allowed"
-                      }`}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
+                {/* Tombol untuk mengunduh CSV */}
+                <div className="mt-4 text-center">
+                  <button
+                    onClick={downloadCSV}
+                    className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+                  >
+                    Unduh CSV
+                  </button>
+                </div>
               </div>
-            </div>
+            </div>{" "}
           </div>
         </div>
       </div>
+
       {/* Footer */}
       <Footer />
     </div>

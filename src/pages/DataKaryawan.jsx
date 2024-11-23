@@ -80,17 +80,7 @@ const DataKaryawan = () => {
   };
 
   // Handle pagination
-  const nextPage = () => {
-    if (currentPage < Math.ceil(filteredData.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -159,7 +149,7 @@ const DataKaryawan = () => {
                       <td className="py-2 px-2 border-b hidden sm:table-cell">
                         {karyawan.gender}
                       </td>
-                      <td className="py-4 px-2  flex items-center text-center ">
+                      <td className="py-4 px-2 flex items-center text-center">
                         <button
                           onClick={() => handleEdit(karyawan.id)}
                           className="bg-blue-500 text-white p-2 rounded mr-2"
@@ -180,16 +170,23 @@ const DataKaryawan = () => {
             </div>
 
             {/* Pagination */}
-            <div className="mt-4 flex justify-between">
+            <div className="flex justify-center mt-6">
               <button
-                onClick={prevPage}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="py-2 px-4 bg-blue-700 text-gray-200 rounded-md hover:bg-blue-800 disabled:opacity-50"
               >
-                Previous
+                Prev
               </button>
+              <span className="py-2 px-4 text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
               <button
-                onClick={nextPage}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="py-2 px-4 bg-blue-700 text-gray-200 rounded-md hover:bg-blue-800 disabled:opacity-50"
               >
                 Next
               </button>
@@ -217,7 +214,6 @@ const DataKaryawan = () => {
                 </div>
               </div>
             )}
-
             {/* Edit Modal */}
             {editData && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-15 z-50">
@@ -285,7 +281,6 @@ const DataKaryawan = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
