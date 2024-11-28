@@ -231,29 +231,39 @@ const Absensi = () => {
               <table className="min-w-full table-auto">
                 <thead className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white text-center">
                   <tr>
-                    <th className="py-2 px-4 text-center">No</th>
-                    <th className="py-2 px-4 text-center">Nama</th>
-                    <th className="py-2 px-4 text-center">ID</th>
-                    <th className="py-2 px-4 text-center">Jenis Kelamin</th>
-                    <th className="py-2 px-4 text-center">Posisi</th>
-                    <th className="py-2 px-4 text-center">Kehadiran</th>
+                    <th className="py-2 px-2 text-center hidden sm:table-cell">
+                      Profile
+                    </th>
+                    <th className="py-2 px-2 text-center">ID</th>
+                    <th className="py-2 px-2 text-center">Nama</th>
+                    <th className="py-2 px-2 text-center hidden sm:table-cell">
+                      Jenis Kelamin
+                    </th>
+                    <th className="py-2 px-2 text-center hidden sm:table-cell">
+                      Posisi
+                    </th>
+                    <th className="py-2 px-2 text-center">Kehadiran</th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((karyawan) => (
                     <tr key={karyawan.rfidId}>
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-2 hidden sm:table-cell">
                         <img
                           src={karyawan.photo}
                           alt={karyawan.name}
                           className="w-10 h-10 rounded-full"
                         />
                       </td>
-                      <td className="py-2 px-4">{karyawan.rfidId}</td>
-                      <td className="py-2 px-4">{karyawan.name}</td>
-                      <td className="py-2 px-4">{karyawan.gender}</td>
-                      <td className="py-2 px-4">{karyawan.position}</td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-2">{karyawan.rfidId}</td>
+                      <td className="py-2 px-2">{karyawan.name}</td>
+                      <td className="py-2 px-2 hidden sm:table-cell">
+                        {karyawan.gender}
+                      </td>
+                      <td className="py-2 px-2 hidden sm:table-cell">
+                        {karyawan.position}
+                      </td>
+                      <td className="py-2 px-2 text-center">
                         <select
                           value={karyawan.kehadiran || ""}
                           onChange={(e) =>
