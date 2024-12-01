@@ -13,6 +13,40 @@ const DataKaryawan = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
+  // Fungsi untuk mengunduh data dalam format CSV
+  const downloadCSV = () => {
+    const csvRows = [];
+    const headers = [
+      "No",
+      "Nama",
+      "RFID ID",
+      "Posisi",
+      "Alamat",
+      "Jenis Kelamin",
+    ];
+    csvRows.push(headers.join(","));
+
+    karyawanData.forEach((karyawan, index) => {
+      const row = [
+        index + 1,
+        karyawan.name,
+        karyawan.rfidId,
+        karyawan.position,
+        karyawan.address,
+        karyawan.gender,
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvString = csvRows.join("\n");
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("download", "karyawan_data.csv");
+    a.click();
+  };
+
   // Fetch data from localStorage on component mount
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("karyawanData"));
@@ -95,7 +129,7 @@ const DataKaryawan = () => {
             Dashboard Absensi
           </h1>
           <div className="container mx-auto">
-            <div className="mb-4">
+            <div className="mb-4 flex justify-between">
               <input
                 type="text"
                 value={search}
@@ -103,6 +137,12 @@ const DataKaryawan = () => {
                 placeholder="Cari karyawan..."
                 className="p-2 border border-gray-300 rounded-md w-full"
               />
+              <button
+                onClick={downloadCSV}
+                className="ml-2 bg-green-500 text-white p-3 rounded"
+              >
+                CSV
+              </button>
             </div>
 
             <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
