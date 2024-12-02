@@ -20,6 +20,17 @@ const Laporan = () => {
     { id: 8, name: "Chris Hall", date: "2024-11-23", status: "Masuk" },
     { id: 9, name: "Jane Smith", date: "2024-10-15", status: "Ijin" },
     { id: 10, name: "Alice Johnson", date: "2024-10-10", status: "Cuti" },
+    { id: 11, name: "Alice Baralak", date: "2024-10-10", status: "Sakit" },
+    { id: 12, name: "Agung", date: "2024-11-10", status: "Sakit" },
+    { id: 13, name: "Adi", date: "2024-11-10", status: "Masuk" },
+    { id: 14, name: "Joker", date: "2024-11-11", status: "Masuk" },
+    { id: 15, name: "Elon Musk", date: "2024-11-11", status: "Ijin" },
+    { id: 16, name: "Mark", date: "2024-11-11", status: "Sakit" },
+    { id: 17, name: "Hapsah", date: "2024-11-11", status: "Masuk" },
+    { id: 18, name: "Ibnu", date: "2024-11-10", status: "Ijin" },
+    { id: 19, name: "Miftah", date: "2024-11-10", status: "Ijin" },
+    { id: 20, name: "Asep", date: "2024-11-10", status: "Masuk" },
+    { id: 21, name: "Asep", date: "2024-11-10", status: "Masuk" },
   ];
 
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -189,65 +200,83 @@ const Laporan = () => {
               <h2 className="text-xl font-semibold text-gray-700 mb-4">
                 Rekap Kehadiran Per Karyawan
               </h2>
-              <div className="mt-6 space-x-4">
-                {/* Input untuk pencarian */}
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Cari berdasarkan nama"
-                  className="border border-gray-300 rounded px-4 py-2 mb-4"
-                />
-                {/* Tombol Unduhan */}
-                <button
-                  onClick={downloadCSV}
-                  className="bg-green-500 text-white px-4 py-2 rounded items-center justify-center"
-                >
-                  {/* Teks akan disembunyikan pada ukuran mobile, ikon hanya muncul di mobile */}
-                  <span className="hidden sm:inline">Unduh CSV</span>
-                  <FaFileCsv className="sm:hidden text-xl" />
-                </button>
+              <div className="container mx-auto mb-4">
+                <div className="mt-6 flex justify-between">
+                  {/* Input untuk pencarian */}
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Cari berdasarkan nama"
+                    className="p-2 border border-gray-300 rounded-md w-[75%]"
+                  />
+                  {/* Tombol Unduhan */}
+                  <button
+                    onClick={downloadCSV}
+                    className="bg-green-500 text-white ml-2 p-3 rounded items-center justify-center"
+                  >
+                    {/* Teks akan disembunyikan pada ukuran mobile, ikon hanya muncul di mobile */}
+                    <span className="hidden sm:inline">Unduh CSV</span>
+                    <FaFileCsv className="sm:hidden text-xl" />
+                  </button>
 
-                <button
-                  onClick={downloadPDF}
-                  className="bg-blue-500 text-white px-4 py-2 rounded items-center justify-center"
-                >
-                  {/* Teks akan disembunyikan pada ukuran mobile, ikon hanya muncul di mobile */}
-                  <span className="hidden sm:inline">Unduh PDF</span>
-                  <FaFilePdf className="sm:hidden text-xl" />
-                </button>
+                  <button
+                    onClick={downloadPDF}
+                    className="bg-red-500 text-white ml-2 p-3 rounded items-center justify-center"
+                  >
+                    {/* Teks akan disembunyikan pada ukuran mobile, ikon hanya muncul di mobile */}
+                    <span className="hidden sm:inline">Unduh PDF</span>
+                    <FaFilePdf className="sm:hidden text-xl" />
+                  </button>
+                </div>
               </div>
               <div className="overflow-x-auto shadow-md rounded-lg mb-8">
-                <table className="min-w-full table-auto">
-                  <thead className="bg-gray-200">
-                    <tr>
-                      <th className="px-4 py-2 text-sm sm:text-base">Nama</th>
-                      <th className="px-4 py-2 text-sm sm:text-base">Masuk</th>
-                      <th className="px-4 py-2 text-sm sm:text-base">
-                        Tidak Masuk
-                      </th>
-                      <th className="px-4 py-2 text-sm sm:text-base">Ijin</th>
-                      <th className="px-4 py-2 text-sm sm:text-base">Sakit</th>
-                      <th className="px-4 py-2 text-sm sm:text-base">Cuti</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(result.perEmployee)
-                      .filter(([name]) =>
-                        name.toLowerCase().includes(searchTerm.toLowerCase())
-                      )
-                      .map(([name, data]) => (
-                        <tr key={name}>
-                          <td className="px-4 py-2">{name}</td>
-                          <td className="px-4 py-2">{data.Masuk}</td>
-                          <td className="px-4 py-2">{data["Tidak Masuk"]}</td>
-                          <td className="px-4 py-2">{data.Ijin}</td>
-                          <td className="px-4 py-2">{data.Sakit}</td>
-                          <td className="px-4 py-2">{data.Cuti}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
+                <div className="max-h-96 overflow-y-auto">
+                  <table className="min-w-full table-auto">
+                    <thead className="bg-gradient-to-r from-indigo-600 to-blue-700 text-white sticky top-0 z-10">
+                      <tr>
+                        <th className="px-4 py-2 text-sm sm:text-base">Nama</th>
+                        <th className="px-4 py-2 text-sm sm:text-base">
+                          Masuk
+                        </th>
+                        <th className="px-4 py-2 text-sm sm:text-base">
+                          Tidak Masuk
+                        </th>
+                        <th className="px-4 py-2 text-sm sm:text-base">Ijin</th>
+                        <th className="px-4 py-2 text-sm sm:text-base">
+                          Sakit
+                        </th>
+                        <th className="px-4 py-2 text-sm sm:text-base">Cuti</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(result.perEmployee)
+                        .filter(([name]) =>
+                          name.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
+                        .map(([name, data]) => (
+                          <tr key={name} className="hover:bg-gray-100">
+                            <td className="px-4 py-2 border">{name}</td>
+                            <td className="px-4 py-2 text-center border">
+                              {data.Masuk}
+                            </td>
+                            <td className="px-4 py-2 text-center  border">
+                              {data["Tidak Masuk"]}
+                            </td>
+                            <td className="px-4 py-2 text-center border">
+                              {data.Ijin}
+                            </td>
+                            <td className="px-4 py-2 text-center border">
+                              {data.Sakit}
+                            </td>
+                            <td className="px-4 py-2 text-center border">
+                              {data.Cuti}
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </>
           )}

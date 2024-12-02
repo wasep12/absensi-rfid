@@ -3,6 +3,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
+import { FaFileCsv } from "react-icons/fa";
 
 const DataKaryawan = () => {
   const [karyawanData, setKaryawanData] = useState([]);
@@ -126,7 +127,7 @@ const DataKaryawan = () => {
         {/* Main Content */}
         <div className="flex-1 p-6 bg-gray-100">
           <h1 className="md:text-left text-center text-3xl font-semibold text-gray-800 mb-6">
-            Dashboard Absensi
+            Data Karyawan
           </h1>
           <div className="container mx-auto">
             <div className="mb-4 flex justify-between">
@@ -141,7 +142,7 @@ const DataKaryawan = () => {
                 onClick={downloadCSV}
                 className="ml-2 bg-green-500 text-white p-3 rounded"
               >
-                CSV
+                <FaFileCsv className="text-xl" />
               </button>
             </div>
 
